@@ -16,6 +16,16 @@ export default function auth(state = initialState, action) {
         case types.LOGIN_SUCCESS:
             return {...initialState, loading: false, profile: action.profile}
     
+            
+        case types.LOGOUT_REQUEST:
+            return {...state, loading: true}
+
+        case types.LOGOUT_FAILURE:
+            return {...state, loading: false, error: action.error}
+
+        case types.LOGOUT_SUCCESS:
+            return initialState
+    
         default:
             return state
     }

@@ -43,7 +43,7 @@ const AuthView = ({ auth, login }) => {
                     </tr>
                 </tbody>
             </table>
-            { error && <p style={{color: 'red'}}><span>{error}</span></p> }
+            { error && <p style={{color: 'red'}}><span>{error.message || error}</span></p> }
             <button 
                 disabled={loading} 
                 onClick={onSignIn}>{ 

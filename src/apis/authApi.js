@@ -1,39 +1,39 @@
-const defaultAuth = {
-    username: 'utifmd',
-    password: '121212'
-}
-const defaultProfiles = [
-    {
-        name: 'Utif Milkedori',
-        username: 'utifmd',
-        address: 'Padang, Indonesia',
-        education: {
-            elementary: 'SD Negri 1 Padang',
-            junior: 'SMP Negri 1 Padang',
-            senior: 'SMA Negri 1 Padang',
-            diploma: 'Universitas Padang',
-            degree: 'Universitas Padang'
-        },
-        organization: 'PT. Code Development Indonesia',
-        experience: {
-            company: 'PT. Code Development Indonesia',
-            title: 'Software Engineer',
-            jobDesc: 'Junior Developer'
-        }
-    }
-]
+import httpClient from "axios"
+import { BASE_URL } from "../constants"
+
 const login = (username, password) => new Promise((resolve, reject) => {
-    const profile = defaultProfiles.find(profile => profile.username === username)
-    setTimeout(() => {
-        if (username === defaultAuth.username && password === defaultAuth.password) resolve(profile)
-        else reject('Unauthorized account')
-    }, 1000);
+    httpClient.get(`${BASE_URL}/auth`).then(response => {
+        if (response.status !== 200) {
+            reject({message: response.statusText})
+            return
+        }
+        const account = response.data
+        if (!account){
+            reject({message: `Account not found`})
+            return
+        }
+        if (username !== account.username || password !== account.password) {
+            reject({message: `Unauthorized account`})
+            return
+        }
+        resolve(account)
+    })
+    .catch(error => reject(error))
 })
 const getAuthor = (username) => new Promise((resolve, reject) => {
-    const profile = defaultProfiles.find(profile => profile.username === username)
-    setTimeout(() => {
+    httpClient.get(`${BASE_URL}/profiles`).then(response => {
+        if (response.status !== 200) {
+            reject({message: response.statusText})
+            return
+        }
+        const profile = response.data.find(profile => profile.username === username)
+        if (!profile){
+            reject({message: `author not found`})
+            return
+        }
         resolve(profile)
-    }, 1000);
+    })
+    .catch(error => reject(error))
 })
 
 export {
